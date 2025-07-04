@@ -9,9 +9,8 @@ export default function Home() {
     { week: 5, dungeon: 30, bonus: 30, exchange: 120 },
   ]);
 
-  const [currentTotal, setCurrentTotal] = useState(0);
+  const [currentTotal, setCurrentTotal] = useState();
   const requiredForUnlock = 1200;
-  const [requiredForItem, setRequiredForItem] = useState(900);
   const [purchasedItems, setPurchasedItems] = useState([]);
 
   const totalEarned = weeklyData.reduce(
@@ -19,8 +18,7 @@ export default function Home() {
     0
   );
 
-  const remainingToUnlock = Math.max(0, requiredForUnlock - currentTotal);
-  const remainingToItem = Math.max(0, requiredForItem - Math.max(0, currentTotal - requiredForUnlock));
+  const remainingToUnlock = Math.max(0, requiredForUnlock - (currentTotal || 0));
 
   const shopItems = [
     { category: "룬", name: "심연의 소원 항아리+: 무기 룬", cost: 900 },
@@ -54,7 +52,7 @@ export default function Home() {
           <input
             type="number"
             className="w-full border px-3 py-2 rounded"
-            value={currentTotal}
+            value={currentTotal || ""}
             onChange={(e) => setCurrentTotal(Number(e.target.value))}
           />
         </div>
@@ -66,16 +64,6 @@ export default function Home() {
             className="w-full border px-3 py-2 rounded bg-gray-100 text-gray-600 cursor-not-allowed"
             value={requiredForUnlock}
             disabled
-          />
-        </div>
-
-        <div className="mb-6">
-          <label className="block mb-1 font-medium">원하는 아이템 필요 수량:</label>
-          <input
-            type="number"
-            className="w-full border px-3 py-2 rounded"
-            value={requiredForItem}
-            onChange={(e) => setRequiredForItem(Number(e.target.value))}
           />
         </div>
 
