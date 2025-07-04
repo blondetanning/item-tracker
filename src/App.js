@@ -34,62 +34,66 @@ export default function Home() {
   ];
 
   return (
-    <main className="min-h-screen p-4 bg-gray-50 text-gray-900">
-      <div className="max-w-2xl mx-auto overflow-x-auto">
-        <h1 className="text-2xl font-bold mb-4">아이템 트래커</h1>
+    <main className="min-h-screen p-6 bg-pink-50 text-gray-900 font-sans">
+      <div className="max-w-3xl mx-auto">
+        <h1 className="text-4xl font-bold text-center text-pink-600 mb-8 bg-pink-100 p-4 rounded-xl shadow">
+          🎀 아이템 트래커
+        </h1>
 
-        <div className="mb-6">
-          <label className="block mb-1 font-medium">현재 보유한 아이템 개수:</label>
+        <div className="mb-6 p-5 bg-white rounded-xl shadow">
+          <label className="block mb-2 font-medium text-gray-700">현재 보유한 아이템 개수:</label>
           <input
             type="number"
-            className="w-full border px-3 py-2 rounded"
+            className="w-full border border-pink-300 px-4 py-3 rounded focus:outline-none focus:ring-2 focus:ring-pink-300"
             value={currentTotal}
             onChange={(e) => setCurrentTotal(Number(e.target.value))}
           />
         </div>
 
-        <div className="mb-6">
-          <label className="block mb-1 font-medium">해금 조건 아이템 수 (고정값):</label>
+        <div className="mb-10 p-5 bg-white rounded-xl shadow">
+          <label className="block mb-2 font-medium text-gray-700">해금 조건 아이템 수 (고정값):</label>
           <input
             type="number"
-            className="w-full border px-3 py-2 rounded bg-gray-100 text-gray-600 cursor-not-allowed"
+            className="w-full border border-gray-300 px-4 py-3 rounded bg-gray-100 text-gray-600 cursor-not-allowed"
             value={requiredForUnlock}
             disabled
           />
         </div>
 
-        <h2 className="text-xl font-semibold mt-10 mb-4">상점 아이템</h2>
-        <table className="w-full text-sm border min-w-[600px]">
-          <thead>
-            <tr className="bg-gray-200">
-              <th className="border p-2">카테고리</th>
-              <th className="border p-2">아이템 이름</th>
-              <th className="border p-2">필요 수량</th>
-              <th className="border p-2">구매 가능 여부</th>
-            </tr>
-          </thead>
-          <tbody>
-            {shopItems.map((item, idx) => {
-              const canUnlock = !item.requireUnlock || currentTotal >= requiredForUnlock;
-              const isPurchasable = canUnlock && currentTotal >= item.cost;
-              const shortage = currentTotal < item.cost ? item.cost - currentTotal : 0;
-              return (
-                <tr key={idx} className="text-center">
-                  <td className="border p-2">{item.category}</td>
-                  <td className="border p-2">{item.name}</td>
-                  <td className="border p-2">{item.cost}</td>
-                  <td className="border p-2">
-                    {isPurchasable
-                      ? "✅ 구매 가능"
-                      : !canUnlock
-                      ? `🔒 해금 필요 (${requiredForUnlock - currentTotal}개 부족)`
-                      : `${shortage}개 부족`}
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+        <h2 className="text-2xl font-semibold text-pink-500 mb-4">🛍️ 상점 아이템</h2>
+        <div className="overflow-x-auto bg-white rounded-xl shadow">
+          <table className="w-full text-base text-gray-800 table-auto">
+            <thead>
+              <tr className="bg-pink-100 text-pink-700">
+                <th className="border-b p-4 text-left">카테고리</th>
+                <th className="border-b p-4 text-left">아이템 이름</th>
+                <th className="border-b p-4 text-right">필요 수량</th>
+                <th className="border-b p-4 text-center">구매 가능 여부</th>
+              </tr>
+            </thead>
+            <tbody>
+              {shopItems.map((item, idx) => {
+                const canUnlock = !item.requireUnlock || currentTotal >= requiredForUnlock;
+                const isPurchasable = canUnlock && currentTotal >= item.cost;
+                const shortage = currentTotal < item.cost ? item.cost - currentTotal : 0;
+                return (
+                  <tr key={idx} className={idx % 2 === 0 ? "bg-white" : "bg-pink-50"}>
+                    <td className="p-4 align-top whitespace-nowrap">{item.category}</td>
+                    <td className="p-4 align-top whitespace-pre-wrap font-medium">{item.name}</td>
+                    <td className="p-4 align-top text-right whitespace-nowrap">{item.cost}</td>
+                    <td className="p-4 align-top text-center">
+                      {isPurchasable
+                        ? "✅ 구매 가능"
+                        : !canUnlock
+                        ? `🔒 해금 필요 (${requiredForUnlock - currentTotal}개 부족)`
+                        : `${shortage}개 부족`}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
       </div>
     </main>
   );
