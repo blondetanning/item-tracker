@@ -9,7 +9,7 @@ export default function Home() {
     { week: 5, dungeon: 30, bonus: 30, exchange: 120 },
   ]);
 
-  const [currentTotal, setCurrentTotal] = useState();
+  const [currentTotal, setCurrentTotal] = useState(0);
   const requiredForUnlock = 1200;
   const [purchasedItems, setPurchasedItems] = useState([]);
 
@@ -18,7 +18,7 @@ export default function Home() {
     0
   );
 
-  const remainingToUnlock = Math.max(0, requiredForUnlock - (currentTotal || 0));
+  const remainingToUnlock = Math.max(0, requiredForUnlock - currentTotal);
 
   const shopItems = [
     { category: "룬", name: "심연의 소원 항아리+: 무기 룬", cost: 900 },
@@ -52,7 +52,7 @@ export default function Home() {
           <input
             type="number"
             className="w-full border px-3 py-2 rounded"
-            value={currentTotal || ""}
+            value={currentTotal}
             onChange={(e) => setCurrentTotal(Number(e.target.value))}
           />
         </div>
@@ -83,6 +83,7 @@ export default function Home() {
               const canUnlock = !item.requireUnlock || currentTotal >= requiredForUnlock;
               const isPurchasable = canUnlock && currentTotal >= item.cost;
               const isChecked = purchasedItems.includes(item.name);
+              const shortage = currentTotal < item.cost ? item.cost - currentTotal : 0;
               return (
                 <tr key={idx} className="text-center">
                   <td className="border p-2">
@@ -97,7 +98,11 @@ export default function Home() {
                   <td className="border p-2">{item.name}</td>
                   <td className="border p-2">{item.cost}</td>
                   <td className="border p-2">
-                    {isPurchasable ? "✅ 구매 가능" : !canUnlock ? `🔒 해금 필요 (${requiredForUnlock - currentTotal}개 부족)` : `${item.cost - currentTotal}개 부족`}
+                    {isPurchasable
+                      ? "✅ 구매 가능"
+                      : !canUnlock
+                      ? `🔒 해금 필요 (${requiredForUnlock - currentTotal}개 부족)`
+                      : `${shortage}개 부족`}
                   </td>
                 </tr>
               );
