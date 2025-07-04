@@ -1,92 +1,134 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
-const startDate = new Date("2025-07-07");
+export default function Home() {
+  const [weeklyData, setWeeklyData] = useState([
+    { week: 1, dungeon: 15, bonus: 0, exchange: 120 },
+    { week: 2, dungeon: 20, bonus: 10, exchange: 120 },
+    { week: 3, dungeon: 30, bonus: 20, exchange: 120 },
+    { week: 4, dungeon: 30, bonus: 30, exchange: 120 },
+    { week: 5, dungeon: 30, bonus: 30, exchange: 120 },
+  ]);
 
-function getWeekRange(week) {
-  const start = new Date(startDate);
-  start.setDate(start.getDate() + (week - 1) * 7);
-  const end = new Date(start);
-  end.setDate(end.getDate() + 6);
-  return `${start.toLocaleDateString()} ~ ${end.toLocaleDateString()}`;
-}
+  const [currentTotal, setCurrentTotal] = useState(0);
+  const [requiredForUnlock, setRequiredForUnlock] = useState(1200);
+  const [requiredForItem, setRequiredForItem] = useState(900);
 
-function calculateWeeklyRewards(week) {
-  if (week === 1) return { dungeon: 15, bonus: 0, exchange: 120 };
-  if (week === 2) return { dungeon: 20, bonus: 10, exchange: 120 };
-  if (week === 3) return { dungeon: 30, bonus: 20, exchange: 120 };
-  return { dungeon: 30, bonus: 30, exchange: 120 };
-}
+  const totalEarned = weeklyData.reduce(
+    (acc, w) => acc + w.dungeon + w.bonus + w.exchange,
+    0
+  );
 
-export default function App() {
-  const weeks = 13;
-  const [completedWeeks, setCompletedWeeks] = useState(Array(weeks).fill(false));
+  const remainingToUnlock = Math.max(0, requiredForUnlock - currentTotal);
+  const remainingToItem = Math.max(0, requiredForItem - Math.max(0, currentTotal - requiredForUnlock));
 
-  const rewards = [];
-  for (let i = 1; i <= weeks; i++) {
-    rewards.push(calculateWeeklyRewards(i));
-  }
-
-  const weeklyTotals = rewards.map(r => r.dungeon + r.bonus + r.exchange);
-
-  const cumulativeTotals = weeklyTotals.reduce((acc, curr, idx) => {
-    if (idx === 0) acc.push(curr);
-    else acc.push(acc[idx - 1] + curr);
-    return acc;
-  }, []);
-
-  const toggleComplete = idx => {
-    const newCompleted = [...completedWeeks];
-    newCompleted[idx] = !newCompleted[idx];
-    setCompletedWeeks(newCompleted);
-  };
+  const shopItems = [
+    { category: "룬", name: "심연의 소원 항아리+: 무기 룬", cost: 900 },
+    { category: "룬", name: "심연의 소원 항아리+: 방어구 룬", cost: 600 },
+    { category: "룬", name: "심연의 소원 항아리+: 엠블럼 룬", cost: 900, requireUnlock: true },
+    { category: "패션 장비", name: "로스트 문스케이프 예복 (여성용)", cost: 630 },
+    { category: "패션 장비", name: "로스트 문스케이프 예복 (남성용)", cost: 630 },
+    { category: "패션 장비", name: "로스트 문스케이프 부츠 (여성용)", cost: 420 },
+    { category: "패션 장비", name: "로스트 문스케이프 부츠 (남성용)", cost: 420 },
+    { category: "패션 장비", name: "로스트 문스케이프 글러브", cost: 420 },
+    { category: "패션 장비", name: "로스트 문스케이프 햇", cost: 630 },
+    { category: "소모품", name: "심연의 소원 항아리+", cost: 10 },
+    { category: "소모품", name: "인챈트 스크롤: 폭스", cost: 400 },
+  ];
 
   return (
-    <div style={{ maxWidth: 700, margin: "auto", padding: 20 }}>
-      <h1>아이템 획득 진행 상황 트래커</h1>
-      <table style={{ width: "100%", borderCollapse: "collapse", marginTop: 20 }}>
-        <thead>
-          <tr>
-            <th style={{ border: "1px solid #ccc", padding: 8 }}>주차</th>
-            <th style={{ border: "1px solid #ccc", padding: 8 }}>기간</th>
-            <th style={{ border: "1px solid #ccc", padding: 8 }}>던전 획득</th>
-            <th style={{ border: "1px solid #ccc", padding: 8 }}>추가 보상</th>
-            <th style={{ border: "1px solid #ccc", padding: 8 }}>교환 보상</th>
-            <th style={{ border: "1px solid #ccc", padding: 8 }}>주차 합계</th>
-            <th style={{ border: "1px solid #ccc", padding: 8 }}>누적 합계</th>
-            <th style={{ border: "1px solid #ccc", padding: 8 }}>완료</th>
-          </tr>
-        </thead>
-        <tbody>
-          {rewards.map((r, idx) => (
-            <tr
-              key={idx}
-              style={{ backgroundColor: completedWeeks[idx] ? "#d4edda" : "white" }}
-            >
-              <td style={{ border: "1px solid #ccc", padding: 8 }}>{idx + 1}주차</td>
-              <td style={{ border: "1px solid #ccc", padding: 8 }}>
-                {getWeekRange(idx + 1)}
-              </td>
-              <td style={{ border: "1px solid #ccc", padding: 8 }}>{r.dungeon}</td>
-              <td style={{ border: "1px solid #ccc", padding: 8 }}>{r.bonus}</td>
-              <td style={{ border: "1px solid #ccc", padding: 8 }}>{r.exchange}</td>
-              <td style={{ border: "1px solid #ccc", padding: 8 }}>{weeklyTotals[idx]}</td>
-              <td style={{ border: "1px solid #ccc", padding: 8 }}>{cumulativeTotals[idx]}</td>
-              <td style={{ border: "1px solid #ccc", padding: 8, textAlign: "center" }}>
-                <input
-                  type="checkbox"
-                  checked={completedWeeks[idx]}
-                  onChange={() => toggleComplete(idx)}
-                />
-              </td>
+    <main className="min-h-screen p-4 bg-gray-50 text-gray-900">
+      <div className="max-w-2xl mx-auto overflow-x-auto">
+        <h1 className="text-2xl font-bold mb-4">아이템 트래커</h1>
+
+        <div className="mb-6">
+          <label className="block mb-1 font-medium">현재 보유한 아이템 개수:</label>
+          <input
+            type="number"
+            className="w-full border px-3 py-2 rounded"
+            value={currentTotal}
+            onChange={(e) => setCurrentTotal(Number(e.target.value))}
+          />
+        </div>
+
+        <div className="mb-6">
+          <label className="block mb-1 font-medium">해금 조건 아이템 수:</label>
+          <input
+            type="number"
+            className="w-full border px-3 py-2 rounded"
+            value={requiredForUnlock}
+            onChange={(e) => setRequiredForUnlock(Number(e.target.value))}
+          />
+        </div>
+
+        <div className="mb-6">
+          <label className="block mb-1 font-medium">원하는 아이템 필요 수량:</label>
+          <input
+            type="number"
+            className="w-full border px-3 py-2 rounded"
+            value={requiredForItem}
+            onChange={(e) => setRequiredForItem(Number(e.target.value))}
+          />
+        </div>
+
+        <table className="w-full text-sm border min-w-[600px]">
+          <thead>
+            <tr className="bg-gray-200">
+              <th className="border p-2">주차</th>
+              <th className="border p-2">던전 획득</th>
+              <th className="border p-2">추가 보상</th>
+              <th className="border p-2">교환 획득</th>
+              <th className="border p-2">총합</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
-      <p style={{ marginTop: 20, fontWeight: "bold" }}>
-        <span>현재 누적 수량: {cumulativeTotals[cumulativeTotals.length - 1]}</span>
-        <br />
-        <span>조건 달성 목표: 2100개</span>
-      </p>
-    </div>
+          </thead>
+          <tbody>
+            {weeklyData.map((week) => (
+              <tr key={week.week} className="text-center">
+                <td className="border p-2">{week.week}주차</td>
+                <td className="border p-2">{week.dungeon}</td>
+                <td className="border p-2">{week.bonus}</td>
+                <td className="border p-2">{week.exchange}</td>
+                <td className="border p-2">
+                  {week.dungeon + week.bonus + week.exchange}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+
+        <div className="mt-6 text-base">
+          <p>총 누적 획득량: <strong>{totalEarned}</strong>개</p>
+          <p className="mt-1">해금까지 남은 개수: <strong>{remainingToUnlock}</strong>개</p>
+          <p className="mt-1">아이템까지 남은 개수: <strong>{remainingToItem}</strong>개</p>
+        </div>
+
+        <h2 className="text-xl font-semibold mt-10 mb-4">상점 아이템</h2>
+        <table className="w-full text-sm border min-w-[600px]">
+          <thead>
+            <tr className="bg-gray-200">
+              <th className="border p-2">카테고리</th>
+              <th className="border p-2">아이템 이름</th>
+              <th className="border p-2">필요 수량</th>
+              <th className="border p-2">구매 가능 여부</th>
+            </tr>
+          </thead>
+          <tbody>
+            {shopItems.map((item, idx) => {
+              const canUnlock = !item.requireUnlock || currentTotal >= requiredForUnlock;
+              const isPurchasable = canUnlock && currentTotal >= item.cost;
+              return (
+                <tr key={idx} className="text-center">
+                  <td className="border p-2">{item.category}</td>
+                  <td className="border p-2">{item.name}</td>
+                  <td className="border p-2">{item.cost}</td>
+                  <td className="border p-2">
+                    {isPurchasable ? "✅ 구매 가능" : !canUnlock ? `🔒 해금 필요 (${requiredForUnlock - currentTotal}개 부족)` : `${item.cost - currentTotal}개 부족`}
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+    </main>
   );
 }
