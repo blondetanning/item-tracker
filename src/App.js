@@ -65,10 +65,10 @@ export default function Home() {
           <table className="w-full text-base text-gray-800 table-auto">
             <thead>
               <tr className="bg-pink-100 text-pink-700">
-                <th className="border-b p-4 text-left">카테고리</th>
-                <th className="border-b p-4 text-left">아이템 이름</th>
-                <th className="border-b p-4 text-right">필요 수량</th>
-                <th className="border-b p-4 text-center">구매 가능 여부</th>
+                <th className="border-b px-6 py-6 text-left text-lg">카테고리</th>
+                <th className="border-b px-6 py-6 text-left text-lg">아이템 이름</th>
+                <th className="border-b px-6 py-6 text-right text-lg">필요 수량</th>
+                <th className="border-b px-6 py-6 text-center text-lg">구매 가능 여부</th>
               </tr>
             </thead>
             <tbody>
@@ -77,11 +77,14 @@ export default function Home() {
                 const isPurchasable = canUnlock && currentTotal >= item.cost;
                 const shortage = currentTotal < item.cost ? item.cost - currentTotal : 0;
                 return (
-                  <tr key={idx} className={`${idx % 2 === 0 ? "bg-white" : "bg-pink-50"} align-top`}>
-                    <td className="px-6 py-5 whitespace-nowrap text-lg">{item.category}</td>
-                    <td className="px-6 py-5 whitespace-pre-wrap font-medium text-lg leading-relaxed">{item.name}</td>
-                    <td className="px-6 py-5 text-right whitespace-nowrap text-lg">{item.cost}</td>
-                    <td className="px-6 py-5 text-center text-lg">
+                  <tr
+                    key={idx}
+                    className={`${idx % 2 === 0 ? "bg-white" : "bg-pink-50"} align-top text-lg md:text-xl leading-loose md:leading-loose`}
+                  >
+                    <td className="px-8 py-10 whitespace-nowrap">{item.category}</td>
+                    <td className="px-8 py-10 whitespace-pre-wrap font-medium">{item.name}</td>
+                    <td className="px-8 py-10 text-right whitespace-nowrap">{item.cost}</td>
+                    <td className="px-8 py-10 text-center">
                       {isPurchasable
                         ? "✅ 구매 가능"
                         : !canUnlock
