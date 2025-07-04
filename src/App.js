@@ -11,7 +11,6 @@ export default function Home() {
 
   const [currentTotal, setCurrentTotal] = useState(0);
   const requiredForUnlock = 1200;
-  const [purchasedItems, setPurchasedItems] = useState([]);
 
   const totalEarned = weeklyData.reduce(
     (acc, w) => acc + w.dungeon + w.bonus + w.exchange,
@@ -33,14 +32,6 @@ export default function Home() {
     { category: "소모품", name: "심연의 소원 항아리+", cost: 10 },
     { category: "소모품", name: "인챈트 스크롤: 폭스", cost: 400 },
   ];
-
-  const togglePurchase = (itemName) => {
-    setPurchasedItems((prev) =>
-      prev.includes(itemName)
-        ? prev.filter((name) => name !== itemName)
-        : [...prev, itemName]
-    );
-  };
 
   return (
     <main className="min-h-screen p-4 bg-gray-50 text-gray-900">
@@ -71,7 +62,6 @@ export default function Home() {
         <table className="w-full text-sm border min-w-[600px]">
           <thead>
             <tr className="bg-gray-200">
-              <th className="border p-2">✔</th>
               <th className="border p-2">카테고리</th>
               <th className="border p-2">아이템 이름</th>
               <th className="border p-2">필요 수량</th>
@@ -82,18 +72,9 @@ export default function Home() {
             {shopItems.map((item, idx) => {
               const canUnlock = !item.requireUnlock || currentTotal >= requiredForUnlock;
               const isPurchasable = canUnlock && currentTotal >= item.cost;
-              const isChecked = purchasedItems.includes(item.name);
               const shortage = currentTotal < item.cost ? item.cost - currentTotal : 0;
               return (
                 <tr key={idx} className="text-center">
-                  <td className="border p-2">
-                    <input
-                      type="checkbox"
-                      checked={isChecked}
-                      disabled={!isPurchasable}
-                      onChange={() => togglePurchase(item.name)}
-                    />
-                  </td>
                   <td className="border p-2">{item.category}</td>
                   <td className="border p-2">{item.name}</td>
                   <td className="border p-2">{item.cost}</td>
