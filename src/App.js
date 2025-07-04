@@ -77,11 +77,11 @@ export default function Home() {
                 const isPurchasable = canUnlock && currentTotal >= item.cost;
                 const shortage = currentTotal < item.cost ? item.cost - currentTotal : 0;
                 return (
-                  <tr key={idx} className={idx % 2 === 0 ? "bg-white" : "bg-pink-50"}>
-                    <td className="p-6 align-top whitespace-nowrap text-lg">{item.category}</td>
-                    <td className="p-6 align-top whitespace-pre-wrap font-medium text-lg">{item.name}</td>
-                    <td className="p-6 align-top text-right whitespace-nowrap text-lg">{item.cost}</td>
-                    <td className="p-6 align-top text-center text-lg">
+                  <tr key={idx} className={`${idx % 2 === 0 ? "bg-white" : "bg-pink-50"} align-top`}>
+                    <td className="px-6 py-5 whitespace-nowrap text-lg">{item.category}</td>
+                    <td className="px-6 py-5 whitespace-pre-wrap font-medium text-lg leading-relaxed">{item.name}</td>
+                    <td className="px-6 py-5 text-right whitespace-nowrap text-lg">{item.cost}</td>
+                    <td className="px-6 py-5 text-center text-lg">
                       {isPurchasable
                         ? "✅ 구매 가능"
                         : !canUnlock
