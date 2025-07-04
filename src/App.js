@@ -12,6 +12,7 @@ export default function Home() {
   const [currentTotal, setCurrentTotal] = useState(0);
   const [requiredForUnlock, setRequiredForUnlock] = useState(1200);
   const [requiredForItem, setRequiredForItem] = useState(900);
+  const [purchasedItems, setPurchasedItems] = useState([]);
 
   const totalEarned = weeklyData.reduce(
     (acc, w) => acc + w.dungeon + w.bonus + w.exchange,
@@ -34,6 +35,14 @@ export default function Home() {
     { category: "소모품", name: "심연의 소원 항아리+", cost: 10 },
     { category: "소모품", name: "인챈트 스크롤: 폭스", cost: 400 },
   ];
+
+  const togglePurchase = (itemName) => {
+    setPurchasedItems((prev) =>
+      prev.includes(itemName)
+        ? prev.filter((name) => name !== itemName)
+        : [...prev, itemName]
+    );
+  };
 
   return (
     <main className="min-h-screen p-4 bg-gray-50 text-gray-900">
@@ -70,41 +79,11 @@ export default function Home() {
           />
         </div>
 
-        <table className="w-full text-sm border min-w-[600px]">
-          <thead>
-            <tr className="bg-gray-200">
-              <th className="border p-2">주차</th>
-              <th className="border p-2">던전 획득</th>
-              <th className="border p-2">추가 보상</th>
-              <th className="border p-2">교환 획득</th>
-              <th className="border p-2">총합</th>
-            </tr>
-          </thead>
-          <tbody>
-            {weeklyData.map((week) => (
-              <tr key={week.week} className="text-center">
-                <td className="border p-2">{week.week}주차</td>
-                <td className="border p-2">{week.dungeon}</td>
-                <td className="border p-2">{week.bonus}</td>
-                <td className="border p-2">{week.exchange}</td>
-                <td className="border p-2">
-                  {week.dungeon + week.bonus + week.exchange}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-
-        <div className="mt-6 text-base">
-          <p>총 누적 획득량: <strong>{totalEarned}</strong>개</p>
-          <p className="mt-1">해금까지 남은 개수: <strong>{remainingToUnlock}</strong>개</p>
-          <p className="mt-1">아이템까지 남은 개수: <strong>{remainingToItem}</strong>개</p>
-        </div>
-
         <h2 className="text-xl font-semibold mt-10 mb-4">상점 아이템</h2>
         <table className="w-full text-sm border min-w-[600px]">
           <thead>
             <tr className="bg-gray-200">
+              <th className="border p-2">✔</th>
               <th className="border p-2">카테고리</th>
               <th className="border p-2">아이템 이름</th>
               <th className="border p-2">필요 수량</th>
@@ -115,8 +94,17 @@ export default function Home() {
             {shopItems.map((item, idx) => {
               const canUnlock = !item.requireUnlock || currentTotal >= requiredForUnlock;
               const isPurchasable = canUnlock && currentTotal >= item.cost;
+              const isChecked = purchasedItems.includes(item.name);
               return (
                 <tr key={idx} className="text-center">
+                  <td className="border p-2">
+                    <input
+                      type="checkbox"
+                      checked={isChecked}
+                      disabled={!isPurchasable}
+                      onChange={() => togglePurchase(item.name)}
+                    />
+                  </td>
                   <td className="border p-2">{item.category}</td>
                   <td className="border p-2">{item.name}</td>
                   <td className="border p-2">{item.cost}</td>
