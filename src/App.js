@@ -78,10 +78,10 @@ export default function Home() {
                 const shortage = currentTotal < item.cost ? item.cost - currentTotal : 0;
                 return (
                   <tr key={idx} className={idx % 2 === 0 ? "bg-white" : "bg-pink-50"}>
-                    <td className="p-4 align-top whitespace-nowrap">{item.category}</td>
-                    <td className="p-4 align-top whitespace-pre-wrap font-medium">{item.name}</td>
-                    <td className="p-4 align-top text-right whitespace-nowrap">{item.cost}</td>
-                    <td className="p-4 align-top text-center">
+                    <td className="p-6 align-top whitespace-nowrap text-lg">{item.category}</td>
+                    <td className="p-6 align-top whitespace-pre-wrap font-medium text-lg">{item.name}</td>
+                    <td className="p-6 align-top text-right whitespace-nowrap text-lg">{item.cost}</td>
+                    <td className="p-6 align-top text-center text-lg">
                       {isPurchasable
                         ? "✅ 구매 가능"
                         : !canUnlock
