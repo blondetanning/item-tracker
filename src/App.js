@@ -10,7 +10,7 @@ export default function Home() {
   ]);
 
   const [currentTotal, setCurrentTotal] = useState(0);
-  const [requiredForUnlock, setRequiredForUnlock] = useState(1200);
+  const requiredForUnlock = 1200;
   const [requiredForItem, setRequiredForItem] = useState(900);
   const [purchasedItems, setPurchasedItems] = useState([]);
 
@@ -60,12 +60,12 @@ export default function Home() {
         </div>
 
         <div className="mb-6">
-          <label className="block mb-1 font-medium">해금 조건 아이템 수:</label>
+          <label className="block mb-1 font-medium">해금 조건 아이템 수 (고정값):</label>
           <input
             type="number"
-            className="w-full border px-3 py-2 rounded"
+            className="w-full border px-3 py-2 rounded bg-gray-100 text-gray-600 cursor-not-allowed"
             value={requiredForUnlock}
-            onChange={(e) => setRequiredForUnlock(Number(e.target.value))}
+            disabled
           />
         </div>
 
