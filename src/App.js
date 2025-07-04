@@ -101,7 +101,7 @@ export default function Home() {
     },
   ]
 
-  const getRarityColor = (rarity: string) => {
+  const getRarityColor = (rarity) => {
     switch (rarity) {
       case "legendary":
         return "from-yellow-400 to-orange-500"
@@ -116,7 +116,7 @@ export default function Home() {
     }
   }
 
-  const getRarityBadgeColor = (rarity: string) => {
+  const getRarityBadgeColor = (rarity) => {
     switch (rarity) {
       case "legendary":
         return "bg-gradient-to-r from-yellow-500 to-orange-600 text-white"
@@ -137,7 +137,7 @@ export default function Home() {
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-2">
-            ⚔️ 붉은 심연의 화석
+            ⚔️ 붉은 심연의 화석 교환소
           </h1>
         </div>
 
